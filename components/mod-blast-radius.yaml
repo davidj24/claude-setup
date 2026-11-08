@@ -1,0 +1,29 @@
+id: mod-blast-radius
+name: blast-radius mod
+kind: plugin
+summary: Before rm, git clean/reset --hard/restore, find -delete etc. run, lists exactly what would be deleted and asks Cancel or Run it.
+default: recommended
+
+platforms:
+  linux: supported
+  windows: "partial: written for POSIX shells; check it fires in Git Bash before relying on it"
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has blast-radius@claude-mods: true"
+
+built_in_alternatives:
+  all:
+    what: "Claude Code's own permission prompts"
+    check: "always present"
+    gap: "They ask before a command but don't show which files it would delete, and auto mode skips many of them."
+
+worth_it_when: "Always; it costs nothing."
+install:
+  all: ["python tools/settings_merge.py enable blast-radius@claude-mods"]
+uninstall: "python tools/settings_merge.py disable blast-radius@claude-mods"

@@ -1,0 +1,58 @@
+id: voice-dictation
+name: Voice dictation (local Whisper, push-to-talk)
+kind: tool
+summary: Tap Right Alt, talk, tap again to paste the transcript anywhere; Right Ctrl while dictating sends it into Claude's prompt box.
+default: ask
+
+platforms:
+  linux: "supported on the setup it was built for: GNOME on Wayland, PipeWire, systemd, kanata, NVIDIA GPU"
+  windows: unsupported
+  macos: unsupported
+
+requires: [kanata]
+needs:
+  - "NVIDIA GPU with CUDA (dictate.py loads Whisper with device=\"cuda\"). Without one it would need editing to device=\"cpu\", compute_type=\"int8\": several times slower."
+  - "GNOME (uses Super+N dock shortcuts to focus Claude; Claude pinned in the first 10 dock slots, dock number hotkeys off)"
+  - "PipeWire (pw-record, pw-dump), systemd user services"
+  - "uv or python3-venv to build the venv"
+
+cost:
+  disk: "~4.2 GB (2.6 GB venv with CUDA libs + 1.6 GB Whisper large-v3-turbo model)"
+  ram: "~2-3 GB VRAM while loaded; a background service runs all session"
+  other: "Edits the kanata config"
+
+detect_installed:
+  linux: "systemctl --user is-enabled voice-dictation"
+
+built_in_alternatives:
+  windows:
+    what: "Windows voice typing (Win+H)"
+    check: "always present on Windows 10/11; Settings → Time & language → Speech for language"
+    gap: "No key that drops the text straight into Claude's prompt box (click there first, then Win+H). Uses Microsoft's online recognition by default. Otherwise close in quality, and it costs 0 GB."
+  macos:
+    what: "Dictation (press Fn/🌐 twice)"
+    check: "System Settings → Keyboard → Dictation"
+    gap: "Same as Windows: no send-to-Claude key; you focus the box yourself."
+  linux:
+    what: "Nothing built in on GNOME. Alternatives: nerd-dictation (Vosk, ~50 MB-2 GB, CPU-only, lower accuracy), or a smaller Whisper model (edit MODEL in dictate.py: \"small\" ~0.5 GB, \"base\" ~150 MB)."
+    check: "n/a"
+    gap: "Smaller models are faster on CPU but make more mistakes."
+
+worth_it_when: "Linux + GNOME + NVIDIA GPU, and 5+ GB free disk."
+skip_when: "Windows or macOS (use the built-in one), or no NVIDIA GPU, or tight on disk."
+
+install:
+  linux:
+    - "git clone https://github.com/davidj24/voice-dictation.git ~/projects/Claude/voice-dictation (the service file hardcodes this path)"
+    - "cd there; build the venv with faster-whisper + nvidia-cublas-cu12 + nvidia-cudnn-cu12 (see its README; uv venv .venv && uv pip install ...)"
+    - "Download the model into ./models (first run downloads it; run once without HF_HUB_OFFLINE=1, or huggingface-cli download mobiuslabsgmbh/faster-whisper-large-v3-turbo --cache-dir models)"
+    - "Merge kanata-voice.kbd pieces into ~/Kanata/kanata.kbd (the kanata component's copy already has them) and make sure kanata runs with --port 127.0.0.1:7070"
+    - "ln -s ~/projects/Claude/voice-dictation/voice-dictation.service ~/.config/systemd/user/ && systemctl --user daemon-reload && systemctl --user enable --now voice-dictation"
+    - "Pin Claude in the GNOME dock's first 10 slots; turn off the dock's own number hotkeys"
+
+verify:
+  linux: "journalctl --user -u voice-dictation -n 20 shows 'loading large-v3-turbo' and no errors; tap Right Alt, say a few words, tap again."
+
+update: "git -C ~/projects/Claude/voice-dictation pull --ff-only && systemctl --user restart voice-dictation"
+uninstall: "~/projects/Claude/voice-dictation/uninstall.sh"
+notes: "Headset handling (switching Bluetooth to headset mode for the mic) assumes a bluez card; other mics work without it."

@@ -1,0 +1,28 @@
+id: mod-dictation-cleanup
+name: dictation-cleanup mod
+kind: plugin
+summary: Strips um/uh/erm and stutter repeats ("the the") from prompts before they're sent.
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has dictation-cleanup@claude-mods: true"
+
+built_in_alternatives: {}
+
+worth_it_when: "You'll dictate prompts on this machine at all (voice-dictation, Win+H, or macOS Dictation). Costs nothing, so say yes if unsure."
+skip_when: "You never dictate here."
+
+install:
+  all: ["python tools/settings_merge.py enable dictation-cleanup@claude-mods"]
+uninstall: "python tools/settings_merge.py disable dictation-cleanup@claude-mods"
+notes: "Win+H and macOS Dictation already drop most fillers, so it helps less there than with Whisper, but still catches stutters."

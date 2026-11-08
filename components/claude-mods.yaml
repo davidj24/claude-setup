@@ -1,0 +1,39 @@
+id: claude-mods
+name: claude-mods marketplace
+kind: plugin
+summary: Registers the davidj24/claude-mods marketplace (public GitHub repo) so the individual mods below can be turned on.
+default: recommended
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+needs:
+  - "Claude desktop app or Claude Code with mods (an early-access feature)"
+
+cost:
+  disk: "<5 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json has extraKnownMarketplaces.claude-mods"
+
+built_in_alternatives: {}
+
+install:
+  all:
+    - "python tools/settings_merge.py marketplace claude-mods github davidj24/claude-mods"
+    - "Dev machine only (where ~/projects/Claude/claude-mods is checked out and you edit mods): use the directory source instead so edits take effect without pushing: python tools/settings_merge.py marketplace claude-mods directory ~/projects/Claude/claude-mods"
+
+verify:
+  all: "After restarting the app, the Plugins menu lists the claude-mods marketplace."
+
+update: >
+  GitHub source: the app refreshes marketplaces itself; after pushing mod changes from another
+  machine, use Plugins → the marketplace → Update if a change hasn't shown up. Directory source:
+  changes are live after a new session.
+uninstall: "python tools/settings_merge.py remove-marketplace claude-mods"
+notes: >
+  Mod source code lives in ~/projects/Claude/claude-mods on the dev machine. Other machines don't
+  need that checkout at all.

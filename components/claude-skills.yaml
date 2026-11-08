@@ -1,0 +1,60 @@
+id: claude-skills
+name: Personal skills (brief, notion-task-sync, c104-notebook, detox)
+kind: skills-repo
+summary: The private davidj24/claude-skills repo, cloned to ~/.claude/skills so every session sees the skills.
+default: recommended
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+needs:
+  - git
+  - curl
+  - "python (must answer to `python`, version 3; the sync skill calls `python`)"
+  - GitHub sign-in (private repo; `gh auth login` or Git Credential Manager)
+
+cost:
+  disk: "<5 MB"
+  ram: "0"
+  other: "Chrome sign-ins to course sites (see notes)"
+
+detect_installed:
+  linux: "git -C ~/.claude/skills remote get-url origin | grep -q davidj24/claude-skills"
+  macos: "git -C ~/.claude/skills remote get-url origin | grep -q davidj24/claude-skills"
+  windows: "git -C $HOME\\.claude\\skills remote get-url origin | Select-String davidj24/claude-skills"
+
+built_in_alternatives: {}
+
+access:
+  repo: https://github.com/davidj24/claude-skills.git
+  visibility: private
+  features:
+    - {id: task-sync, name: Task sync, guide: guides/task-sync.md, summary: "Keeps one task database current from your inboxes and ticks off what you've done."}
+    - {id: brief-and-secretary, name: Daily brief and secretary, guide: guides/brief-and-secretary.md, requires: [task-sync], summary: "Type brief for one daily summary of your inboxes, calendar and tasks."}
+    - {id: course-notebook, name: Course study notebook, guide: guides/course-notebook.md, summary: "Keeps a Gemini notebook full of a course's readings and slides."}
+    - {id: setup-audit, name: Setup audit (detox), guide: guides/setup-audit.md, summary: "Audits your Claude setup and changes only what you tick."}
+
+worth_it_when: "Any machine you'll do schoolwork or the daily brief on."
+skip_when: "A machine that's only for one project and never runs the brief."
+
+install:
+  all:
+    - "If ~/.claude/skills exists and isn't this repo, rename it aside (skills.bak-<date>) first."
+    - "git clone https://github.com/davidj24/claude-skills.git ~/.claude/skills"
+    - "Then follow ~/.claude/skills/SETUP_PROMPT.md steps 3-6 (bCourses token, connector checks, Chrome sign-ins). Do them in this session rather than starting a new one."
+
+secrets:
+  - path: "~/.claude/secrets/bcourses-token"
+    how: "bCourses → Account → Settings → New access token. Paste alone on one line. chmod 600 on Linux/macOS. Never print it."
+
+verify:
+  all: "~/.claude/skills/brief/SKILL.md and ~/.claude/skills/notion-task-sync/SKILL.md exist; the bCourses curl check in SETUP_PROMPT.md step 3 returns JSON."
+
+update: "git -C ~/.claude/skills pull --ff-only (the brief run also does this)."
+uninstall: "Delete ~/.claude/skills."
+notes: >
+  Connectors (Notion, Gmail, Slack, Linear, Google Calendar/Drive) come with the claude.ai
+  account, so nothing to install for them, only a check that they're on. Sync state lives on a
+  small Notion state page, so any machine can run the brief.

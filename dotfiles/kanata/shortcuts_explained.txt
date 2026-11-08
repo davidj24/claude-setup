@@ -1,0 +1,97 @@
+========================================
+KANATA SHORTCUTS & LAYERS REFERENCE
+========================================
+
+1. CAPS LOCK (Programming Symbols Layer)
+----------------------------------------
+• Tapped alone: Does nothing (prevents accidental toggling of Caps Lock)[cite: 2].
+• Held with another key: Activates the Programming Symbols Layer[cite: 2].
+
+• Escape:
+    + Caps Lock + Tab : Escape[cite: 2]
+
+• Programming / LaTeX symbols:
+    + Caps Lock + Q : Pipe | [cite: 2]
+    + Caps Lock + W : Tilde ~ [cite: 2]
+    + Ctrl + Caps Lock + W : Close active window (Alt + F4)[cite: 2]
+    + Caps Lock + E : Backslash \ [cite: 2]
+    + Caps Lock + R : Caret ^ [cite: 2]
+    + Caps Lock + C : Underscore _ [cite: 2]
+
+• Operators:
+    + Caps Lock + D : Minus -[cite: 2]
+    + Caps Lock + F : Plus +[cite: 2]
+    + Caps Lock + R : Equals =[cite: 2]
+
+• Delimiters:
+    + Caps Lock + I : Left Parenthesis ([cite: 2]
+    + Caps Lock + O : Right Parenthesis )[cite: 2]
+    + Caps Lock + J : Left Curly Brace {[cite: 2]
+    + Caps Lock + K : Right Curly Brace }[cite: 2]
+    + Caps Lock + M : Left Square Bracket [[cite: 2]
+    + Caps Lock + , : Right Square Bracket ][cite: 2]
+
+
+2. PHYSICAL LEFT ALT (Navigation, Editing & Commands Layer)
+-----------------------------------------------------------
+• Tapped alone: Does nothing (prevents focus-stealing on Windows menu bars)[cite: 2, 3].
+• Held with another key: Activates Navigation, Editing, and Application Launchers[cite: 2].
+
+Cursor & Word Navigation:
+    + Left Alt + W : Up Arrow[cite: 2]
+    + Left Alt + A : Left Arrow[cite: 2]
+    + Left Alt + S : Down Arrow[cite: 2]
+    + Left Alt + D : Right Arrow[cite: 2]
+    + Left Alt + Q : Move one word left (Ctrl + Left Arrow)[cite: 2]
+    + Left Alt + E : Move one word right (Ctrl + Right Arrow)[cite: 2]
+    + Left Alt + R : Home (beginning of line)[cite: 2]
+    + Left Alt + F : End (end of line)[cite: 2]
+
+Text Editing & Deletion:
+    + Left Alt + H, J, or I : Backspace[cite: 2]
+    + Left Alt + Shift + H, J, U or I : Delete previous word (Ctrl + Backspace)[cite: 2]
+    + Left Alt + ' or \ : Enter[cite: 2]
+
+Window Switching:
+    + Left Alt + Tab    : Native Alt-Tab window switcher[cite: 2]
+
+Application Launchers:
+    + Ctrl + Left Alt + T : Open Terminal (/usr/bin/gnome-terminal)[cite: 2]
+    + Ctrl + Left Alt + V : Open VS Code (/usr/bin/code)[cite: 2]
+    + Ctrl + Left Alt + G : Open Google Chrome (/usr/bin/google-chrome)[cite: 2]
+    + Ctrl + Left Alt + K : Open Slack (/usr/bin/snap run slack)[cite: 2]
+
+
+3. TAB (Numbers & Symbols Layer)
+--------------------------------
+• Tapped alone: Acts as a normal Tab key[cite: 2].
+• Held down: Activates the Numbers and Symbols Layer[cite: 2].
+
+• Top Row (Q to P): Shifted symbols (!, @, #, $, %, ^, &, *, (, ))[cite: 2]
+• Home Row (A to ;): Numbers (1, 2, 3, 4, 5, 6, 7, 8, 9, 0)[cite: 2]
+
+
+4. HOME-ROW MODIFIERS
+---------------------
+• Tapped: Types standard letters[cite: 2].
+• Held: Activates modifiers[cite: 2].
+
+    + Tap D : d    |    Hold D : Left Control[cite: 2]
+    + Tap F : f    |    Hold F : Left Shift[cite: 2]
+    + Tap J : j    |    Hold J : Right Shift[cite: 2]
+    + Tap K : k    |    Hold K : Right Control[cite: 2]
+
+
+5. QUICK EXAMPLES
+-----------------
+• Open Terminal:
+    Hold Ctrl + Left Alt and press T[cite: 2].
+
+• Delete previous word:
+    Hold Left Alt and press U (or I)[cite: 2].
+
+• Press Enter without leaving home row:
+    Hold Left Alt and press ' (or \ or ;)[cite: 2].
+
+• Close active window:
+    Hold Ctrl + Caps Lock and press W[cite: 2].

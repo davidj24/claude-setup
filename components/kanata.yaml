@@ -1,0 +1,56 @@
+id: kanata
+name: Kanata keyboard layers
+kind: dotfile
+summary: Your kanata remaps (Caps Lock programming-symbols layer and the rest, see shortcuts_explained.txt) plus the voice-dictation keys.
+default: ask
+
+platforms:
+  linux: supported
+  windows: "partial: kanata runs on Windows, and the config has no Linux-only options, but the voice keys do nothing without voice-dictation"
+  macos: "partial: needs the Karabiner VirtualHIDDevice driver"
+
+needs:
+  - "kanata binary (github.com/jtroo/kanata releases; on this machine it's ~/Kanata/kanata)"
+  - "Linux: access to /dev/uinput and input devices (user in the input/uinput groups + udev rule; needs sudo once)"
+
+cost:
+  disk: "~3 MB"
+  ram: "~10 MB background service"
+  other: "Changes how your keyboard behaves everywhere; needs sudo once on Linux"
+
+detect_installed:
+  linux: "systemctl --user is-active kanata"
+  windows: "Get-Process kanata"
+
+files:
+  - repo: dotfiles/kanata/kanata.kbd
+    target: "~/Kanata/kanata.kbd"
+  - repo: dotfiles/kanata/shortcuts_explained.txt
+    target: "~/Kanata/shortcuts_explained.txt"
+  - repo: dotfiles/kanata/kanata.service
+    target: "~/.config/systemd/user/kanata.service (Linux)"
+
+built_in_alternatives:
+  windows:
+    what: "PowerToys Keyboard Manager"
+    check: "winget list Microsoft.PowerToys"
+    gap: "Simple remaps only; no layers or tap-hold, so the Caps Lock symbols layer can't be rebuilt."
+
+worth_it_when: "You want the same keyboard layers as your main machine (muscle memory)."
+skip_when: "Shared/work machine where you can't install drivers or services."
+
+install:
+  linux:
+    - "Download the kanata release binary to ~/Kanata/kanata and chmod +x"
+    - "Set up uinput permissions (kanata docs: 'Avoid using sudo on Linux'); the user runs the sudo commands themselves"
+    - "Link the repo copies: ln -sf <repo>/dotfiles/kanata/kanata.kbd ~/Kanata/kanata.kbd (symlink so edits flow back into this repo)"
+    - "cp dotfiles/kanata/kanata.service ~/.config/systemd/user/ && systemctl --user enable --now kanata"
+  windows:
+    - "winget install jtroo.kanata (or download kanata.exe), copy kanata.kbd next to it, run kanata.exe --cfg kanata.kbd; add a Startup shortcut"
+
+verify:
+  linux: "systemctl --user is-active kanata; try the Caps Lock layer."
+
+update: "git pull in this repo; the symlinked config is already current. systemctl --user restart kanata."
+uninstall: "systemctl --user disable --now kanata; remove ~/Kanata."
+notes: "On the original machine ~/Kanata/kanata.kbd is a symlink into this repo, so edit either place and commit here."

@@ -1,0 +1,31 @@
+id: mod-voice-picker
+name: voice-picker mod
+kind: plugin
+summary: A Voices pane for read-aloud — play samples, pick a voice, speed slider, auto-read toggle (/voices).
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods, read-aloud]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has voice-picker@claude-mods: true"
+
+built_in_alternatives:
+  all:
+    what: "read-aloud's own /read-aloud:voice command"
+    check: "present once read-aloud is installed"
+    gap: "Text-only; no samples to click or slider."
+
+worth_it_when: "read-aloud is installed with Kokoro (many voices to choose from)."
+skip_when: "read-aloud isn't installed, or you only use the one system voice."
+
+install:
+  all: ["python tools/settings_merge.py enable voice-picker@claude-mods"]
+uninstall: "python tools/settings_merge.py disable voice-picker@claude-mods"

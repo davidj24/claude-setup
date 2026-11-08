@@ -1,0 +1,809 @@
+(defcfg
+process-unmapped-keys yes
+)
+
+;; ============================================================
+;; SOURCE KEYS
+;;
+;; grv = physical ` / ~ key
+;; It is used as a backup real Caps Lock toggle.
+;; ============================================================
+
+(defsrc
+grv   tab   q      w      e      r      t      y      u      i      o      p      [      ]      bksl
+caps  a      s      d      f      g      h      j      k      l      ;      '
+lsft  z      x      c      v      b      n      m      ,      .      /      rsft   lalt
+spc   ralt   esc   rctl
+)
+
+(defvar
+tap-time 200
+hold-time 200
+)
+
+;; ============================================================
+;; VIRTUAL KEYS
+;; ============================================================
+
+(defvirtualkeys
+
+;; Voice dictation messages sent on key release (see VOICE DICTATION).
+voice-up-msg (push-msg "voice-up")
+
+;; Held down by the dictation daemon (over TCP) while a dictation is running,
+;; so Esc and Right Ctrl know to act on it.
+voice-active XX
+
+;; Used for normal stateful Alt-Tab.
+alt-switcher-alt lalt
+
+;; Repeated Ctrl+Backspace used by Shift+Alt+H/J.
+word-delete-repeat
+(macro-repeat-release-cancel
+(unmod (lsft rsft) lctl bspc)
+45
+)
+
+)
+
+(defalias
+
+;; ============================================================
+;; CAPS LOCK LAYER
+;; ============================================================
+
+caps-layer
+(layer-while-held caps-symbols)
+
+;; ============================================================
+;; PHYSICAL LEFT ALT
+;; ============================================================
+
+alt-layer
+(multi
+(layer-while-held alt-navigation)
+(on-release release-vkey alt-switcher-alt)
+)
+
+;; ============================================================
+;; ALT-TAB
+;; ============================================================
+
+alt-alt-tab
+(macro
+(on-press press-vkey alt-switcher-alt)
+10
+tab
+)
+
+;; ============================================================
+;; TAB SYMBOLS / NUMBER LAYER
+;; ============================================================
+
+symbols-layer
+(tap-hold-press
+$tap-time
+$hold-time
+tab
+(layer-while-held symbols)
+)
+
+;; ============================================================
+;; NAVIGATION ACTIONS
+;; ============================================================
+
+nav-up        up
+nav-left      left
+nav-down      down
+nav-right     rght
+
+nav-home      home
+nav-end       end
+
+nav-prev-word C-left
+nav-next-word C-rght
+
+;; ============================================================
+;; EDITING ACTIONS
+;; ============================================================
+
+edit-backspace bspc
+edit-enter     ret
+
+;; One Ctrl+Backspace.
+edit-prev-word-del
+(unmod (lsft rsft) lctl bspc)
+
+;; ============================================================
+;; REPEATED WORD DELETE
+;;
+;; Shift+Alt+H/J:
+;;
+;; delete immediately
+;; wait 350 ms
+;; repeat every 45 ms
+;; ============================================================
+
+edit-prev-word-del-repeat
+(multi
+
+(macro-release-cancel
+(unmod (lsft rsft) lctl bspc)
+350
+(on-press press-vkey word-delete-repeat)
+)
+
+(on-release release-vkey word-delete-repeat)
+
+)
+
+;; Alt+U/I:
+;;
+;; Alt only       = Backspace
+;; Shift+Alt      = one Ctrl+Backspace
+edit-backspace-action
+(fork
+@edit-backspace
+@edit-prev-word-del
+(lsft rsft)
+)
+
+;; Alt+H/J:
+;;
+;; Alt only       = Backspace
+;; Shift+Alt      = repeated Ctrl+Backspace
+edit-backspace-repeat-action
+(fork
+@edit-backspace
+@edit-prev-word-del-repeat
+(lsft rsft)
+)
+
+;; ============================================================
+;; PROGRAMMING / LATEX SYMBOLS
+;; ============================================================
+
+symbol-lparen       S-9
+symbol-rparen       S-0
+
+symbol-lcurly       S-[
+symbol-rcurly       S-]
+
+symbol-lbracket     [
+symbol-rbracket     ]
+
+symbol-backslash    bksl
+symbol-pipe         S-bksl
+symbol-tilde        S-grv
+
+symbol-minus        -
+symbol-plus         S-=
+symbol-equals       =
+
+symbol-caret        S-6
+symbol-underscore   S--
+
+symbol-at           S-2
+symbol-ampersand    S-7
+
+;; ============================================================
+;; LATEX MACROS
+;; ============================================================
+
+;; ------------------------------------------------------------
+;; Caps+H
+;;
+;; \text{ | }
+;; ------------------------------------------------------------
+
+latex-text
+(macro
+bksl t e x t
+S-[
+spc spc
+S-]
+left left
+)
+
+;; ------------------------------------------------------------
+;; Caps + physical [
+;;
+;; \vec
+;;
+;; Includes trailing space.
+;; ------------------------------------------------------------
+
+latex-vec
+(macro
+bksl v e c spc
+)
+
+;; ------------------------------------------------------------
+;; Caps+Alt + physical [
+;;
+;; \mathbf
+;;
+;; Includes trailing space.
+;; ------------------------------------------------------------
+
+latex-mathbf
+(macro
+bksl m a t h b f spc
+)
+
+;; ------------------------------------------------------------
+;; Alt+Caps+Space
+;;
+;; Types:
+;;
+;;  &
+;;
+;; Includes a space on BOTH sides of the ampersand.
+;; ------------------------------------------------------------
+
+latex-ampersand-spaced
+(macro
+spc
+S-7
+spc
+)
+
+;; ------------------------------------------------------------
+;; Alt+Caps+R
+;;
+;; Types:
+;;
+;; \R
+;; ------------------------------------------------------------
+
+latex-R
+(macro
+bksl
+S-r
+)
+
+;; ------------------------------------------------------------
+;; Caps+A
+;;
+;; \begin{aligned}
+;; & |
+;; \end{aligned}
+;;
+;; Shift+Enter is used for Notion math cells.
+;; ------------------------------------------------------------
+
+latex-aligned
+(macro
+bksl b e g i n S-[ a l i g n e d S-]
+S-ret
+S-7 spc
+S-ret
+bksl e n d S-[ a l i g n e d S-]
+up
+)
+
+;; ------------------------------------------------------------
+;; Caps+B
+;;
+;; \begin{bmatrix}
+;;
+;; |
+;; \end{bmatrix}
+;;
+;; Shift+Enter is required for Notion.
+;; ------------------------------------------------------------
+
+latex-bmatrix
+(macro
+bksl b e g i n S-[ b m a t r i x S-]
+S-ret
+S-ret
+bksl e n d S-[ b m a t r i x S-]
+up
+)
+
+;; ------------------------------------------------------------
+;; Caps+C
+;;
+;; \begin{cases}
+;;
+;; |
+;; \end{cases}
+;;
+;; Shift+Enter is required for Notion.
+;; ------------------------------------------------------------
+
+latex-cases
+(macro
+bksl b e g i n S-[ c a s e s S-]
+S-ret
+S-ret
+bksl e n d S-[ c a s e s S-]
+up
+)
+
+;; ------------------------------------------------------------
+;; Caps+T
+;;
+;; ^{ \top }
+;; ------------------------------------------------------------
+
+latex-transpose
+(macro
+S-6
+S-[
+spc
+bksl t o p
+spc
+S-]
+)
+
+;; ------------------------------------------------------------
+;; Caps+N
+;;
+;; \nabla_{ | }
+;; ------------------------------------------------------------
+
+latex-gradient
+(macro
+bksl n a b l a
+S--
+S-[
+spc spc
+S-]
+left left
+)
+
+;; ============================================================
+;; SCALED DELIMITER MACROS
+;; ============================================================
+
+;; ------------------------------------------------------------
+;; Alt+Caps+I
+;;
+;; \left( | \right)
+;; ------------------------------------------------------------
+
+latex-scaled-parens
+(macro
+bksl l e f t S-9
+spc spc
+bksl r i g h t S-0
+left left left left left left left left
+)
+
+;; ------------------------------------------------------------
+;; Alt+Caps+J
+;;
+;; \left\{ | \right\}
+;; ------------------------------------------------------------
+
+latex-scaled-curly
+(macro
+bksl l e f t
+bksl S-[
+spc spc
+bksl r i g h t
+bksl S-]
+left left left left left left left left left
+)
+
+;; ------------------------------------------------------------
+;; Alt+Caps+M
+;;
+;; \left[ | \right]
+;; ------------------------------------------------------------
+
+latex-scaled-brackets
+(macro
+bksl l e f t [
+spc spc
+bksl r i g h t ]
+left left left left left left left left
+)
+
+;; ------------------------------------------------------------
+;; Alt+Caps+N
+;;
+;; J_{ | }[  ]
+;; ------------------------------------------------------------
+
+latex-jacobian
+(macro
+S-j
+S--
+S-[
+spc spc
+S-]
+[
+spc spc
+]
+left left left left left left
+)
+
+;; ============================================================
+;; ALT ACTIONS THAT CHECK PHYSICAL CAPS
+;;
+;; No separate Alt+Caps layer is used.
+;;
+;; The physical state of Caps is inspected directly. This
+;; avoids the old issue where the Alt+Caps layer could become
+;; stuck.
+;; ============================================================
+
+;; ------------------------------------------------------------
+;; Alt+I          = Backspace
+;; Shift+Alt+I    = Ctrl+Backspace
+;; Alt+Caps+I     = scalable parentheses
+;; ------------------------------------------------------------
+
+alt-i-action
+(switch
+((input real caps)) @latex-scaled-parens break
+() @edit-backspace-action break
+)
+
+;; ------------------------------------------------------------
+;; Alt+J          = Backspace
+;; Shift+Alt+J    = repeated word delete
+;; Alt+Caps+J     = scalable curly braces
+;; ------------------------------------------------------------
+
+alt-j-action
+(switch
+((input real caps)) @latex-scaled-curly break
+() @edit-backspace-repeat-action break
+)
+
+;; ------------------------------------------------------------
+;; Alt+M          = m
+;; Alt+Caps+M     = scalable square brackets
+;; ------------------------------------------------------------
+
+alt-m-action
+(switch
+((input real caps)) @latex-scaled-brackets break
+() m break
+)
+
+;; ------------------------------------------------------------
+;; Alt+N          = n
+;; Alt+Caps+N     = Jacobian template
+;; ------------------------------------------------------------
+
+alt-n-action
+(switch
+((input real caps)) @latex-jacobian break
+() n break
+)
+
+;; ------------------------------------------------------------
+;; NEW:
+;;
+;; Alt+R          = Home
+;; Alt+Caps+R     = \R
+;; ------------------------------------------------------------
+
+alt-r-action
+(switch
+((input real caps)) @latex-R break
+() @nav-home break
+)
+
+;; ------------------------------------------------------------
+;; NEW:
+;;
+;; Alt+Space      = ordinary Space
+;; Alt+Caps+Space = " & "
+;;
+;; This moves the matrix-entry separator off Caps+Space so
+;; accidental simultaneous Caps+Space presses are harmless.
+;; ------------------------------------------------------------
+
+alt-space-action
+(switch
+((input real caps)) @latex-ampersand-spaced break
+() spc break
+)
+
+;; ============================================================
+;; BASE [ / ] REMAPPINGS
+;;
+;; These aliases must be declared BEFORE alt-left-bracket-action
+;; because Kanata resolves aliases in declaration order.
+;;
+;; Physical [ = \
+;; Physical ] = \
+;;
+;; Shift+[ = |
+;; Shift+] = |
+;; ============================================================
+
+left-bracket-action
+(fork
+@symbol-backslash
+@symbol-pipe
+(lsft rsft)
+)
+
+right-bracket-action
+(fork
+@symbol-backslash
+@symbol-pipe
+(lsft rsft)
+)
+
+;; ============================================================
+;; ALT + PHYSICAL [ ACTION
+;;
+;; Caps+Alt+[ -> \mathbf
+;;
+;; Otherwise preserves the normal physical [ behavior,
+;; which in this layout produces backslash.
+;; ============================================================
+
+alt-left-bracket-action
+(switch
+((input real caps)) @latex-mathbf break
+() @left-bracket-action break
+)
+
+;; ============================================================
+;; WINDOW ACTION
+;;
+;; Caps+W      = ~
+;; Ctrl+Caps+W = Alt+F4
+;; ============================================================
+
+close-window
+(unmod (lctl rctl) lalt f4)
+
+caps-w-action
+(fork
+@symbol-tilde
+@close-window
+(lctl rctl)
+)
+
+;; ============================================================
+;; VOICE DICTATION (~/projects/Claude/voice-dictation)
+;;
+;; Tap Right Alt               = start dictating into the active window;
+;;                               tap again to finish (or hold it, and let go)
+;; Right Ctrl during dictation = send the text to Claude instead
+;; Esc during dictation        = cancel, even if stuck connecting the mic
+;;
+;; Kanata only sends messages over its TCP server (--port 7070);
+;; the dictation daemon does the recording, pasting and timing.
+;; ============================================================
+
+voice
+(multi
+(push-msg "voice-down")
+(on-release tap-vkey voice-up-msg)
+)
+
+;; Esc cancels while dictating, and is plain Esc otherwise.
+voice-esc
+(switch
+((input virtual voice-active)) (push-msg "voice-cancel") break
+() esc break
+)
+
+;; Right Ctrl sends the text to Claude while dictating, and is plain Right Ctrl otherwise.
+voice-rctl
+(switch
+((input virtual voice-active)) (push-msg "voice-claude") break
+() rctl break
+)
+
+;; ============================================================
+;; GEMINI
+;; ============================================================
+
+alt-gemini A-g
+
+)
+
+;; ============================================================
+;; BASE LAYER
+;;
+;; Physical ` key produces real Caps Lock.
+;;
+;; Physical [ and ] both produce backslash.
+;; Shift+[ and Shift+] produce pipe.
+;; ============================================================
+
+(deflayer base
+
+caps  @symbols-layer q      w      e      r      t      y      u      i      o      p      @left-bracket-action @right-bracket-action bksl
+
+@caps-layer    a      s      d      f      g      h      j      k      l      ;      '
+
+lsft           z      x      c      v      b      n      m      ,      .      /      rsft   @alt-layer
+
+spc   @voice   @voice-esc   @voice-rctl
+)
+
+;; ============================================================
+;; CAPS PROGRAMMING / LATEX LAYER
+;;
+;; Caps+Tab = Escape
+;;
+;; SYMBOLS
+;; -------
+;; Q       = |
+;; W       = ~
+;; E       = _
+;; R       = ^
+;;
+;; S       = -
+;; D       = +
+;; F       = =
+;; G       = _
+;;
+;; U       = @
+;; P       = &
+;;
+;; I/O     = ( )
+;; J/K     = { }
+;; M/,     = [ ]
+;;
+;; LATEX / STRUCTURE
+;; -----------------
+;; A       = aligned environment
+;; B       = bmatrix environment
+;; C       = cases environment
+;; H       = \text{ | }
+;; T       = ^{ \top }
+;; N       = \nabla_{ | }
+;;
+;; [       = \vec
+;;
+;; Space   = NORMAL SPACE
+;; V       = intentionally free
+;;
+;; Alt+Caps+Space = " & "
+;; Alt+Caps+R     = \R
+;; Alt+Caps+[     = \mathbf
+;; ============================================================
+
+(deflayermap (caps-symbols)
+
+tab esc
+
+q @symbol-pipe
+w @caps-w-action
+e @symbol-underscore
+r @symbol-caret
+
+s @symbol-minus
+d @symbol-plus
+f @symbol-equals
+g @symbol-underscore
+
+u @symbol-at
+p @symbol-ampersand
+
+i @symbol-lparen
+o @symbol-rparen
+
+j @symbol-lcurly
+k @symbol-rcurly
+
+m @symbol-lbracket
+, @symbol-rbracket
+
+a @latex-aligned
+b @latex-bmatrix
+c @latex-cases
+
+h @latex-text
+
+t @latex-transpose
+n @latex-gradient
+
+;; IMPORTANT:
+;;
+;; Caps+Space has been reverted to an ordinary space.
+spc spc
+
+;; Caps + physical [ = "\vec "
+[ @latex-vec
+
+)
+
+;; ============================================================
+;; LEFT ALT NAVIGATION / EDITING LAYER
+;;
+;; Physical Caps state is queried directly by switch actions.
+;;
+;; New:
+;;
+;; Alt+Caps+Space = " & "
+;; Alt+Caps+R     = \R
+;;
+;; Existing:
+;;
+;; Alt+Caps+[ = \mathbf
+;; ============================================================
+
+(deflayermap (alt-navigation)
+
+caps XX
+
+tab @alt-alt-tab
+
+w @nav-up
+a @nav-left
+s @nav-down
+d @nav-right
+
+q @nav-prev-word
+e @nav-next-word
+
+;; Alt+R = Home
+;; Alt+Caps+R = \R
+r @alt-r-action
+
+f @nav-end
+
+g @alt-gemini
+
+;; I / J can be editing OR Alt+Caps LaTeX macros.
+i @alt-i-action
+j @alt-j-action
+
+;; H remains editing only.
+h @edit-backspace-repeat-action
+
+;; U remains editing only.
+u @edit-backspace-action
+
+;; Alt+Caps structure commands.
+m @alt-m-action
+n @alt-n-action
+
+;; Caps+Alt + physical [ = "\mathbf "
+[ @alt-left-bracket-action
+
+;; Alt+Space = regular space
+;; Caps+Alt+Space = " & "
+spc @alt-space-action
+
+;; Convenient Enter keys.
+scln @edit-enter
+'    @edit-enter
+bksl @edit-enter
+
+)
+
+;; ============================================================
+;; TAB SYMBOL / NUMBER LAYER
+;; ============================================================
+
+(deflayermap (symbols)
+
+q S-1
+w S-2
+e S-3
+r S-4
+t S-5
+y S-6
+u S-7
+i S-8
+o S-9
+p S-0
+
+a 1
+s 2
+d 3
+f 4
+g 5
+h 6
+j 7
+k 8
+l 9
+; 0
+
+)

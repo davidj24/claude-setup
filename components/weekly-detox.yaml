@@ -1,0 +1,34 @@
+id: weekly-detox
+name: Weekly /detox scheduled task
+kind: scheduled-task
+summary: Runs /detox once a week and publishes a cleanup checklist; changes nothing until you say go.
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-skills]
+cost:
+  disk: "0"
+  ram: "0"
+  other: "One scheduled session a week (uses some usage); only runs while the desktop app is open"
+
+detect_installed:
+  all: "~/.claude/scheduled-tasks/weekly-detox/SKILL.md exists, or the scheduled-tasks list shows weekly-detox"
+
+files:
+  - repo: dotfiles/weekly-detox/SKILL.md
+    target: "~/.claude/scheduled-tasks/weekly-detox/SKILL.md"
+
+built_in_alternatives: {}
+
+worth_it_when: "This is your main machine. Run it on ONE machine only: it audits the account-wide setup, so two machines would give two duplicate checklists."
+skip_when: "Another machine already runs it (check machines/*.yaml)."
+
+install:
+  all:
+    - "Create it with the scheduled-tasks tool (weekly), using the prompt in dotfiles/weekly-detox/SKILL.md, with the working directory changed to this machine's path."
+
+uninstall: "Delete it from the scheduled tasks list."

@@ -1,0 +1,45 @@
+id: read-aloud
+name: read-aloud plugin (third-party, michaelpgifford/claude-read-aloud)
+kind: plugin
+summary: Reads Claude's replies aloud (/read-aloud:speak, auto-read, Ctrl+Alt+S).
+default: ask
+
+platforms:
+  linux: "supported; the stock voice (espeak) is poor, so the Kokoro voice is worth adding"
+  windows: "supported; the system (SAPI) voice is decent out of the box"
+  macos: "supported; the system `say` voices are good out of the box"
+
+needs:
+  - "Python 3.9+ on PATH (python3, or python on Windows)"
+
+cost:
+  disk: "<5 MB plugin; +~340 MB if you add the Kokoro voice"
+  ram: "Kokoro: a few hundred MB while speaking"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has read-aloud@claude-read-aloud: true"
+
+built_in_alternatives:
+  windows:
+    what: "Narrator (Win+Ctrl+Enter)"
+    check: "always present"
+    gap: "Reads the whole screen, not just the reply; no auto-read of each reply; clumsy for this."
+  macos:
+    what: "Spoken Content → Speak selection (Option+Esc)"
+    check: "System Settings → Accessibility → Spoken Content"
+    gap: "You select text by hand each time; no auto-read."
+
+worth_it_when: "You like listening to long replies. On Linux add Kokoro (~340 MB); on Windows/macOS try the system voice first and add Kokoro only if you want a nicer voice and have the disk."
+skip_when: "You never use audio on this machine."
+
+install:
+  all:
+    - "python tools/settings_merge.py marketplace claude-read-aloud git https://github.com/michaelpgifford/claude-read-aloud.git"
+    - "python tools/settings_merge.py enable read-aloud@claude-read-aloud"
+    - "Restart the app, then (Linux, or if wanted) run /read-aloud:voice-setup in a session for Kokoro."
+
+verify:
+  all: "/read-aloud:speak-status shows the provider and voice."
+update: "Updates with its marketplace."
+uninstall: "python tools/settings_merge.py disable read-aloud@claude-read-aloud"
+notes: "Voice and speed are per machine (stored in the plugin's own config), so pick them again with /read-aloud:voice or the voice-picker pane."

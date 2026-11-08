@@ -1,0 +1,9 @@
+#!/bin/sh
+# Runs the newest Claude Code that the Claude desktop app has installed.
+# The app's install path includes its version, so this looks it up on each run.
+newest=$(ls -d "$HOME"/.config/Claude/claude-code/*/*/claude 2>/dev/null | sort -V | tail -n 1)
+if [ -z "$newest" ] || [ ! -x "$newest" ]; then
+  echo "claude: no Claude Code found in ~/.config/Claude/claude-code" >&2
+  exit 127
+fi
+exec "$newest" "$@"

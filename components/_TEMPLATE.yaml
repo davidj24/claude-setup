@@ -1,0 +1,64 @@
+# Copy this file to components/<id>.yaml for every new skill, mod, tool or config you add.
+# The setup-device skill reads these files; Claude does the checking and asking, so plain
+# English is fine anywhere. Leave out any field that doesn't apply.
+
+id: example-thing             # same as the filename
+name: Example thing
+kind: tool                    # skills-repo | plugin | tool | dotfile | scheduled-task | config
+summary: One line on what it gives you.
+
+# recommended = install unless I say no; ask = always ask with the tradeoffs; optional = mention only
+default: ask
+
+platforms:
+  linux: supported            # supported | partial (say what's missing) | unsupported
+  windows: unsupported
+  macos: unsupported
+
+requires: []                  # other component ids that must be installed first
+needs:                        # tools or hardware on the machine
+  - git
+
+cost:
+  disk: "~0"
+  ram: "~0"
+  other: ""                   # e.g. "needs sudo once", "adds a background service"
+
+# How to tell it's already set up here. Commands that exit 0 when it is.
+detect_installed:
+  linux: "test -d ~/somewhere"
+  windows: "Test-Path $HOME\\somewhere"
+
+# What the OS (or something else already on the machine) gives you instead, and what you'd lose
+# by using that instead of this. The setup skill shows these before asking.
+built_in_alternatives:
+  windows:
+    what: "Some built-in feature"
+    check: "command that tells whether it's on, or 'always present'"
+    gap: "What it can't do that this does"
+
+# When the tradeoff tips toward installing, and when it doesn't.
+# Only for things in a private repo. Setup tests access; without it, each feature is built from its guide.
+access:
+  repo: https://github.com/you/private-repo.git
+  visibility: private
+  features:
+    - {id: example-feature, name: Example feature, guide: guides/example-feature.md, summary: "What it gives you."}
+
+worth_it_when: "Lots of free disk; you use it daily"
+skip_when: "Low on disk; built-in is good enough"
+
+install:
+  linux:
+    - "step one (commands or plain instructions)"
+  windows:
+    - "..."
+
+secrets: []                   # files the user must fill in by hand, never committed
+
+verify:
+  linux: "command or check that proves it works"
+
+update: "how to pull new changes on a machine that has it"
+uninstall: "how to remove it"
+notes: ""

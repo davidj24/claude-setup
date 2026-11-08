@@ -1,0 +1,53 @@
+id: claude-recaps
+name: Hourly Claude session recap upload
+kind: scheduled-task
+summary: Uploads short session recaps to a private repo every hour so the daily brief can see work done on this machine.
+default: recommended
+
+platforms:
+  linux: supported
+  windows: "supported (written for Windows but not yet run there)"
+  macos: unsupported
+
+requires:
+  - claude-skills
+needs:
+  - git
+  - "python (must answer to `python`, version 3)"
+  - GitHub sign-in (private repo; `gh auth login` or Git Credential Manager)
+
+cost:
+  disk: "<1 MB"
+  ram: "0 between runs"
+  other: "Background timer each hour; uses no AI or tokens"
+
+detect_installed:
+  linux: "systemctl --user is-enabled claude-recaps.timer"
+  windows: "Get-ScheduledTask -TaskName claude-recaps"
+
+built_in_alternatives: {}
+
+access:
+  repo: https://github.com/davidj24/claude-recaps.git
+  visibility: private
+  features:
+    - {id: recap-sync, name: Recap sync across devices, guide: guides/recap-sync.md, requires: [task-sync], summary: "Lets the brief see your Claude work on every device, at no token cost."}
+
+worth_it_when: "You do any Claude work on this machine and want the brief to know about it."
+skip_when: "You never use Claude on this machine."
+
+install:
+  all:
+    - "git -C ~/.claude/skills pull --ff-only"
+    - "python ~/.claude/skills/notion-task-sync/recaps.py install https://github.com/davidj24/claude-recaps.git"
+
+secrets: []
+
+verify:
+  all: "A file named after this machine appears in ~/.claude/recaps-repo and in the GitHub repo after install."
+
+update: "Comes with the claude-skills repo."
+uninstall: "Linux: systemctl --user disable --now claude-recaps.timer, then delete its two files in ~/.config/systemd/user. Windows: Unregister-ScheduledTask -TaskName claude-recaps. Then delete ~/.claude/recaps-repo."
+notes: >
+  Only runs while the machine is on. Anything since the last upload goes up the next time it's
+  on, and a machine that's off when the brief runs shows up in a later brief.

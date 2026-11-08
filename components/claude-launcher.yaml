@@ -1,0 +1,47 @@
+id: claude-launcher
+name: claude command launcher
+kind: dotfile
+summary: Puts a `claude` command on PATH that starts the newest Claude Code installed by the desktop app, for terminals, scripts and /detox's unattended checks.
+default: ask
+
+platforms:
+  linux: supported
+  windows: unsupported
+  macos: unsupported
+
+needs:
+  - Claude desktop app with the Code tab used at least once (it installs ~/.config/Claude/claude-code)
+
+cost:
+  disk: "4 KB or less"
+  ram: "0 (exits into claude)"
+  other: "None. Uses the app's copy, so no separate install to update."
+
+detect_installed:
+  linux: "command -v claude"
+
+files:
+  - repo: dotfiles/claude-launcher/claude
+    target: "~/.local/bin/claude"
+
+built_in_alternatives:
+  linux:
+    what: "Anthropic's standalone Claude Code install, which provides its own claude command"
+    check: "command -v claude"
+    gap: "Nothing functional; it's a second copy that updates separately from the app. Use it instead on a machine without the desktop app."
+
+worth_it_when: "The desktop app is the only Claude Code on this machine and `command -v claude` finds nothing."
+skip_when: "`command -v claude` already finds a working claude; the standalone install normally lives at this same ~/.local/bin/claude path, so don't replace it."
+
+install:
+  linux:
+    - "If `command -v claude` already finds one, stop and mark this as not needed."
+    - "Make sure ~/.local/bin is on PATH (bash -lc 'echo $PATH')."
+    - "Symlink the file listed under files."
+
+verify:
+  linux: "bash -lc 'claude --version'"
+
+update: "Nothing to do. It finds the app's newest version on each run."
+uninstall: "rm ~/.local/bin/claude"
+notes: "The detox skill also finds the app's copy by itself, so /detox works without this."

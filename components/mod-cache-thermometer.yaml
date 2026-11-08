@@ -1,0 +1,29 @@
+id: mod-cache-thermometer
+name: cache-thermometer mod
+kind: plugin
+summary: Bar above the prompt with the prompt-cache countdown, warm vs cold cost of the next reply, and 5-hour/weekly usage left.
+default: recommended
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+  other: "Optional auto-warm sends small keep-warm pings (off by default)."
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has cache-thermometer@claude-mods: true"
+
+built_in_alternatives:
+  all:
+    what: "/usage and the app's usage page"
+    check: "always present"
+    gap: "No live cache countdown or break-even advice."
+
+install:
+  all: ["python tools/settings_merge.py enable cache-thermometer@claude-mods"]
+uninstall: "python tools/settings_merge.py disable cache-thermometer@claude-mods"

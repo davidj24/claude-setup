@@ -1,0 +1,33 @@
+id: global-claude-md
+name: Shared global CLAUDE.md
+kind: config
+summary: Instructions every session on every machine follows, including "register new workflow pieces in claude-setup".
+default: recommended
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+cost:
+  disk: "0"
+  ram: "0"
+  other: "Loaded into every session's context (keep it short)"
+
+detect_installed:
+  linux: "test \"$(readlink -f ~/.claude/CLAUDE.md)\" = \"$(readlink -f <repo>/home/CLAUDE.md)\""
+  windows: "~/.claude/CLAUDE.md matches <repo>/home/CLAUDE.md"
+
+files:
+  - repo: home/CLAUDE.md
+    target: "~/.claude/CLAUDE.md"
+
+built_in_alternatives: {}
+
+install:
+  linux: ["If ~/.claude/CLAUDE.md exists, merge its content into home/CLAUDE.md first. Then ln -sf <repo>/home/CLAUDE.md ~/.claude/CLAUDE.md"]
+  macos: ["Same as Linux."]
+  windows: ["Copy home/CLAUDE.md to $HOME\\.claude\\CLAUDE.md (symlinks need Developer Mode). The update run copies it again and warns if the copy was edited locally."]
+
+update: "Linux/macOS: git pull is enough. Windows: the update run re-copies it."
+uninstall: "Delete ~/.claude/CLAUDE.md."

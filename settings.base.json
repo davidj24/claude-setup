@@ -1,0 +1,6 @@
+{
+  "_comment": "Shared settings for every machine. settings_merge.py base only adds keys a machine doesn't have yet, so per-machine choices win. Plugins and marketplaces are set per component, not here.",
+  "model": "fable",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}
