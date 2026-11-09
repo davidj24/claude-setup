@@ -1,0 +1,54 @@
+id: voice-reader
+name: Voice reader (local Kokoro text-to-speech with pause and rewind)
+kind: tool
+summary: Reads highlighted text or Claude's replies aloud on your own PC, with pause, rewind, skip, a progress bar and text cleanup for lists, units and abbreviations.
+default: ask
+
+platforms:
+  linux: "supported on GNOME with PipeWire/ALSA, systemd and kanata; the highlight hotkey reads the selection through XWayland"
+  windows: unsupported
+  macos: unsupported
+
+requires: [kanata, read-aloud]
+needs:
+  - "read-aloud's Kokoro voice set up with /read-aloud:voice-setup (the reader shares its model and Python environment)"
+  - "aplay, curl, notify-send, system Python with GTK 3, systemd user services"
+
+cost:
+  disk: "<1 MB of code; shares read-aloud's ~525 MB Kokoro install"
+  ram: "~520 MB while the model is loaded; unloaded after 10 idle minutes"
+  other: "Adds a background service and Left Alt hotkeys in the kanata config"
+
+detect_installed:
+  linux: "systemctl --user is-enabled voice-reader"
+
+built_in_alternatives:
+  linux:
+    what: "read-aloud plugin on its own (auto-read, Kokoro voice)"
+    check: "present once read-aloud is installed"
+    gap: "No pause, rewind or progress bar, reads only Claude replies, and has simpler text cleanup."
+  windows:
+    what: "read-aloud plugin; Narrator (Win+Ctrl+Enter) for other apps"
+    check: "always present on Windows 10/11"
+    gap: "Not built for this OS; read-aloud has no pause or rewind."
+  macos:
+    what: "read-aloud plugin; Speak Selection (System Settings → Accessibility → Spoken Content)"
+    check: "System Settings → Accessibility → Spoken Content"
+    gap: "Not built for this OS; read-aloud has no pause or rewind."
+
+worth_it_when: "Linux + GNOME, and you listen to replies often enough to want rewinding."
+skip_when: "Windows or macOS, or read-aloud on its own is enough."
+
+install:
+  linux:
+    - "git clone https://github.com/davidj24/voice-reader.git ~/projects/Claude/voice-reader (the service file hardcodes this path)"
+    - "Run /read-aloud:voice-setup if Kokoro isn't installed yet"
+    - "Turn read-aloud's own auto-read off so two voices don't overlap"
+    - "ln -s ~/projects/Claude/voice-reader/voice-reader.service ~/.config/systemd/user/ && systemctl --user daemon-reload && systemctl --user enable --now voice-reader"
+
+verify:
+  linux: "journalctl --user -u voice-reader -n 5 shows 'listening' and 'connected to kanata'; highlight text and press Left Alt+T."
+
+update: "git -C ~/projects/Claude/voice-reader pull --ff-only && systemctl --user restart voice-reader"
+uninstall: "systemctl --user disable --now voice-reader, remove the service symlink and ~/projects/Claude/voice-reader, and remove the VOICE READER parts of the kanata config"
+notes: "The voice-picker mod is its control panel: auto-read button, voices, speed and the player."

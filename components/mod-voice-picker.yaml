@@ -1,7 +1,7 @@
 id: mod-voice-picker
 name: voice-picker mod
 kind: plugin
-summary: A Voices pane for read-aloud — play samples, pick a voice, speed slider, auto-read toggle (/voices).
+summary: A Voices pane — play samples, pick a voice, speed slider, auto-read toggle (/voices), plus a player with pause, rewind and a progress bar when voice-reader is running. Uses read-aloud where voice-reader isn't available.
 default: ask
 
 platforms:

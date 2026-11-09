@@ -1,7 +1,7 @@
 id: kanata
 name: Kanata keyboard layers
 kind: dotfile
-summary: Your kanata remaps (Caps Lock programming-symbols layer and the rest, see shortcuts_explained.txt) plus the voice-dictation keys.
+summary: Your kanata remaps (Caps Lock programming-symbols layer and the rest, see shortcuts_explained.txt) plus the voice-dictation and voice-reader keys.
 default: ask
 
 platforms:

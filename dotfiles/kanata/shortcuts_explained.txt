@@ -62,6 +62,14 @@ Application Launchers:
     + Ctrl + Left Alt + K : Open Slack (/usr/bin/snap run slack)[cite: 2]
 
 
+Voice Reader (~/projects/Claude/voice-reader):
+    + Left Alt + T : Read the highlighted text aloud
+    + Left Alt + Y : Pause / resume
+    + Left Alt + K / L : Back / forward 10 seconds
+    + Left Alt + O / P : Previous / next sentence
+    + Left Alt + X : Stop
+
+
 3. TAB (Numbers & Symbols Layer)
 --------------------------------
 • Tapped alone: Acts as a normal Tab key[cite: 2].

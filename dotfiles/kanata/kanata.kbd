@@ -598,6 +598,24 @@ voice-rctl
 )
 
 ;; ============================================================
+;; VOICE READER (~/projects/Claude/voice-reader)
+;;
+;; Left Alt + T = read the highlighted text aloud
+;; Left Alt + Y = pause / resume
+;; Left Alt + K / L = back / forward 10 seconds
+;; Left Alt + O / P = previous / next sentence
+;; Left Alt + X = stop
+;; ============================================================
+
+reader-read    (push-msg "reader-read")
+reader-toggle  (push-msg "reader-toggle")
+reader-back    (push-msg "reader-back")
+reader-forward (push-msg "reader-forward")
+reader-prev    (push-msg "reader-prev")
+reader-next    (push-msg "reader-next")
+reader-stop    (push-msg "reader-stop")
+
+;; ============================================================
 ;; GEMINI
 ;; ============================================================
 
@@ -766,6 +784,15 @@ n @alt-n-action
 
 ;; Caps+Alt + physical [ = "\mathbf "
 [ @alt-left-bracket-action
+
+;; Voice reader controls.
+t (fork @reader-read t (lctl rctl))
+y @reader-toggle
+k (fork @reader-back k (lctl rctl))
+l @reader-forward
+o @reader-prev
+p @reader-next
+x @reader-stop
 
 ;; Alt+Space = regular space
 ;; Caps+Alt+Space = " & "
