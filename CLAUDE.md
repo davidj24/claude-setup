@@ -11,5 +11,5 @@ This public repo describes a Claude workflow so any machine can be set up or syn
 Rules:
 - This repo is public. No IDs, addresses, personal paths or machine records; those stay in private repos.
 - Never commit secrets, tokens, `.credentials.json`, session data or model files. Components list secrets by path only.
-- Code for a component lives in its own repo (claude-skills, claude-mods, voice-dictation); this repo only points at it.
+- Code for a component lives in its own repo (claude-skills, claude-mods, voice-dictation, voice-reader); this repo only points at it.
 - Keep component files accurate: if you change how something installs or what it costs, update its yaml in the same change.

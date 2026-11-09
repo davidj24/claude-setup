@@ -102,4 +102,4 @@ Voice Reader (~/projects/Claude/voice-reader):
     Hold Left Alt and press ' (or \ or ;)[cite: 2].
 
 • Close active window:
-    Hold Ctrl + Caps Lock and press W[cite: 2].
+    Hold Ctrl + Caps Lock and press W[cite: 2].
