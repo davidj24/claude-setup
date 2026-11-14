@@ -13,7 +13,7 @@ Ask the user for: the notebook URL, where the course schedule lives, and which r
 3. **Add web readings by link,** all at once through Add sources → Websites. If the connection drops, check the list before retrying, or you'll create duplicates. Remove any failed sources afterward.
 4. **Hand over the rest.** Scripted uploads don't work in Gemini, so download slides and course-hosted PDFs into one folder for the user to drag in. Paywalled sites, Google Docs `/pub` links, Google Slides links and course-site files usually can't be added by URL.
 5. **Rename every new source:** `L<NN> - <Author> - <Short title>`, or `L<NN> - Slides - <Lecture title>`. Use two-digit lecture numbers. Renaming needs real key presses, because setting the field by script doesn't save.
-6. **Report** what was added, what's waiting to be dragged in, and what failed. If you've built the brief, put the drag-in list under FYI.
+6. **Report** what was added, what's waiting to be dragged in, and what failed. Run it as its own weekly scheduled task rather than inside a daily brief, so the brief stays cheap. If you've built the task sync, have it leave one "notebook uploads" task while files are waiting, so the drag-in list still reaches you.
 
 ## Done when
 

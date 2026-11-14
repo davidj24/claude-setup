@@ -1,0 +1,35 @@
+id: weekly-c104
+name: Weekly course-notebook scheduled task
+kind: scheduled-task
+summary: Runs the c104-notebook skill every Thursday evening so the Gemini study notebook stays current, outside the daily brief.
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-skills]
+cost:
+  disk: "0"
+  ram: "0"
+  other: "One scheduled Sonnet session a week; only runs while the desktop app is open, and needs Chrome with the Claude in Chrome extension connected"
+
+detect_installed:
+  all: "~/.claude/scheduled-tasks/weekly-c104/SKILL.md exists, or the scheduled-tasks list shows weekly-c104"
+
+files:
+  - repo: dotfiles/weekly-c104/SKILL.md
+    target: "~/.claude/scheduled-tasks/weekly-c104/SKILL.md"
+
+built_in_alternatives: {}
+
+worth_it_when: "This machine has Chrome signed in to the course sites and is on on Thursday evenings. Run it on ONE machine only."
+skip_when: "Another machine already runs it (check machines/*.yaml), or the course is over."
+
+install:
+  all:
+    - "Create it with the scheduled-tasks tool (cron `0 19 * * 4`), using the prompt in dotfiles/weekly-c104/SKILL.md, with the working directory changed to this machine's path."
+    - "Open the task in the desktop app and click Run now once to pre-approve its Chrome and Notion tools."
+
+uninstall: "Delete it from the scheduled tasks list."
