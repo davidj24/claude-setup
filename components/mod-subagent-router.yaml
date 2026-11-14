@@ -1,0 +1,28 @@
+id: mod-subagent-router
+name: subagent-router mod
+kind: plugin
+summary: "When Claude starts a subagent without naming a model, routes reading and search work to Haiku or Sonnet; hard work keeps the main model."
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has subagent-router@claude-mods: true"
+
+built_in_alternatives: {}
+
+worth_it_when: "You use subagents (deep research, web-fetch, the brief). Costs nothing to run, so say yes if unsure."
+skip_when: "You want every subagent on the main model."
+
+install:
+  all: ["python tools/settings_merge.py enable subagent-router@claude-mods"]
+uninstall: "python tools/settings_merge.py disable subagent-router@claude-mods"
+notes: "Keyword rules, so it can misjudge a task. /route-agents off turns it off."

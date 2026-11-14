@@ -1,0 +1,28 @@
+id: mod-connector-trim
+name: connector-trim mod
+kind: plugin
+summary: "Shrinks large connector (MCP) results with fixed rules: drops empty fields, image links, blobs and JSON indentation. No model; the full result stays in /tmp."
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has connector-trim@claude-mods: true"
+
+built_in_alternatives: {}
+
+worth_it_when: "You use connectors (Gmail, Slack, Notion, Linear, Drive) here. Costs nothing, so say yes if unsure."
+skip_when: "You never use connectors here, or you want every result exactly as the server sent it (/trim off also works)."
+
+install:
+  all: ["python tools/settings_merge.py enable connector-trim@claude-mods"]
+uninstall: "python tools/settings_merge.py disable connector-trim@claude-mods"
+notes: "Only results over 2,000 characters that shrink by at least 10% are changed. Text content is never removed."

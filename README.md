@@ -23,11 +23,11 @@ A Claude Code workflow, described so that Claude can set it up on any machine. C
 | Recap sync | Lets the brief see your Claude work on every device, at no token cost | Private; [build guide](guides/recap-sync.md) |
 | Course notebook | Keeps a study notebook full of a course's readings | Private; [build guide](guides/course-notebook.md) |
 | Setup audit (detox) | Audits your setup and changes only what you tick | Private; [build guide](guides/setup-audit.md) |
-| Mods: blast-radius, cache-thermometer, dictation-cleanup, voice-picker | Interface additions for Claude | Public: [claude-mods](https://github.com/davidj24/claude-mods) |
+| Mods: blast-radius, cache-thermometer, dictation-cleanup, voice-picker, connector-trim, screenshot-shrink, subagent-router | Interface additions for Claude | Public: [claude-mods](https://github.com/davidj24/claude-mods) |
 | Read-aloud | Reads replies aloud | Public, third-party |
 | Voice dictation | Local voice typing (NVIDIA GPU; Linux with GNOME, or Windows) | Public: [voice-dictation](https://github.com/davidj24/voice-dictation) |
 | Voice reader | Local text-to-speech with pause and rewind (Linux, GNOME) | Public: [voice-reader](https://github.com/davidj24/voice-reader) |
-| Keyboard layers, launcher, weekly audit, global instructions | Personal config files | Included in this repo |
+| Keyboard layers, launcher, weekly audit, global instructions, output style | Personal config files | Included in this repo |
 
 Claude tests access to each private repo without asking anyone to sign in. If you have access, it installs from the repo. If you don't, it uses the guide.
 

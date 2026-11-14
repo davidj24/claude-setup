@@ -1,0 +1,28 @@
+id: mod-screenshot-shrink
+name: screenshot-shrink mod
+kind: plugin
+summary: "Takes browser screenshots (Claude in Chrome, built-in browser) at half size, about a quarter of the tokens."
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+requires: [claude-mods]
+cost:
+  disk: "<1 MB"
+  ram: "0"
+
+detect_installed:
+  all: "~/.claude/settings.json enabledPlugins has screenshot-shrink@claude-mods: true"
+
+built_in_alternatives: {}
+
+worth_it_when: "Claude drives a browser on this machine. Costs nothing, so say yes if unsure."
+skip_when: "Claude never uses a browser here."
+
+install:
+  all: ["python tools/settings_merge.py enable screenshot-shrink@claude-mods"]
+uninstall: "python tools/settings_merge.py disable screenshot-shrink@claude-mods"
+notes: "Needs a Claude in Chrome extension that supports `scale`; older ones return full-size images. /shrink off turns it off."
