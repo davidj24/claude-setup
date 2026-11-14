@@ -1,0 +1,57 @@
+id: output-style-concise-plain
+name: Concise Plain output style
+kind: dotfile
+summary: Claude Code output style for short, plain answers with no filler. Keeps technical terms when they are the most exact word.
+default: ask
+
+platforms:
+  linux: supported
+  windows: supported
+  macos: supported
+
+needs:
+  - Claude Code
+
+cost:
+  disk: "4 KB or less"
+  ram: "0"
+  other: "Adds about 200 tokens to each session's system prompt. Shorter replies should offset that, but tool output and history usually use more tokens than replies."
+
+detect_installed:
+  linux: "test -e ~/.claude/output-styles/concise-plain.md"
+  windows: "Test-Path $HOME\\.claude\\output-styles\\concise-plain.md"
+
+files:
+  - repo: dotfiles/output-styles/concise-plain.md
+    target: "~/.claude/output-styles/concise-plain.md"
+
+built_in_alternatives:
+  linux: &claude_code_builtin
+    what: "Claude Code's built-in Concise output style"
+    check: "Listed in the Code tab's output style menu, if the installed version has it"
+    gap: "Its text is fixed, so it can't be edited to carry these plain-wording rules."
+  windows: *claude_code_builtin
+  macos: *claude_code_builtin
+
+worth_it_when: "You want short, plain replies in every session."
+skip_when: "You prefer longer explanations, or the built-in Concise style is good enough."
+
+install:
+  linux:
+    - "Symlink the file listed under files. Create ~/.claude/output-styles first."
+    - "Set \"outputStyle\": \"Concise Plain\" in ~/.claude/settings.json if the user wants it as the default."
+  windows:
+    - "Copy the file listed under files. Create ~/.claude/output-styles first."
+    - "Set \"outputStyle\": \"Concise Plain\" in ~/.claude/settings.json if the user wants it as the default."
+  macos:
+    - "Symlink the file listed under files. Create ~/.claude/output-styles first."
+    - "Set \"outputStyle\": \"Concise Plain\" in ~/.claude/settings.json if the user wants it as the default."
+
+verify:
+  linux: "Start a new session and check that Concise Plain is the selected output style."
+  windows: "Start a new session and check that Concise Plain is the selected output style."
+  macos: "Start a new session and check that Concise Plain is the selected output style."
+
+update: "Symlinks update with a git pull. On Windows, copy the file again."
+uninstall: "Delete ~/.claude/output-styles/concise-plain.md and remove outputStyle from ~/.claude/settings.json."
+notes: "keep-coding-instructions must stay true. Without it, the style replaces Claude Code's built-in software engineering instructions."
